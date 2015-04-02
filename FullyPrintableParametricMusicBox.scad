@@ -445,6 +445,22 @@ module MusicBoxHoles()
 	}
 }
 
+module MusicBoxPins()
+{
+	rotate([180,0,0])
+	translate([0, -(2*gearH+3*gear_gap), teethH])
+	for (x=[0:2])
+	{
+		assign(gearHolderWidth = 2*gearH+3*gear_gap+songH)
+		assign (yoff = (x+1)*gearHolderWidth/4)
+		translate([0.5*teethHolderW,yoff,0])
+		{
+			cylinder(d=5, h=0.5*teethHolderH, $fn=50);
+			translate([0,0,-teethH]) cylinder(d=7, h=teethH, $fn=50);
+		}
+	}
+}
+
 module MusicBox()
 {
 	//mirror([0,0,1])
@@ -517,6 +533,8 @@ if (GENERATE_CASE)
 			rotate([0,-noteAlpha*1,0]){
 			
 				translate([-60,0,0]) MusicBox();
+
+				translate([30,0,0]) MusicBoxPins();
 
 				// music gear holder
 				difference()
