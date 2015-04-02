@@ -178,8 +178,8 @@ teethGap = pinH;
 
 pinD=1.5;
 
-teethHolderW=5;
-teethHolderH=5;
+teethHolderW=20;
+teethHolderH=20;
 
 
 
@@ -486,7 +486,7 @@ if (GENERATE_CASE)
 			//translate([0,0, 500+negXEnd*sin(noteAlpha)]) cube([1000, 1000, 1000], center=true);
 
 			assign(maxX = max(posXEnd, -negXEnd))
-			translate([0,0, 2*frameH+negXEnd*sin(noteAlpha)]) cube([3*maxX, 2*frameW, 4*frameH], center=true);
+			translate([0,0, 2*frameH+negXEnd*sin(noteAlpha)]) cube([4*maxX, 3*frameW, 4*frameH], center=true);
 		}
 	rotate([FOR_PRINT?180:0, FOR_PRINT?-noteAlpha:0,0])
 	{
@@ -501,8 +501,22 @@ if (GENERATE_CASE)
 		translate([-(noteExtendX+musicCylinderRX),-(gearH/2+gear_gap+teethGap),0]) 
 			rotate([0,-noteAlpha*1,0]){
 			
-				MusicBox();
-				translate([0,2*gearH+wall,-teethHolderW]) cube([-negXEnd,teethHolderW,teethHolderW]);
+				translate([0,0,-30]) MusicBox();
+
+				// music gear holder
+				rotate([180,0,0]) translate([0, -(2*gearH+3*gear_gap), teethH])
+				difference()
+				{
+					cube([teethHolderW, 2*gearH+3*gear_gap+songH, teethHolderH-teethH]);
+
+					for (x=[0:2])
+					{
+						assign(gearHolderWidth = 2*gearH+3*gear_gap+songH)
+						assign (yoff = (x+1)*gearHolderWidth/4)
+						translate([0.5*teethHolderW,yoff,-epsilonCSG]) cylinder(d=5, h=0.5*teethHolderH+epsilonCSG, $fn=50);
+					}
+				}
+				translate([0,2*gearH+wall,-teethHolderW]) cube([-negXEnd,5,teethHolderW]);
 			}
 	
 		// snapaxis for crank
