@@ -432,35 +432,50 @@ module MusicCylinder(extra=0)
 	}
 }
 
-
+module MusicBoxHoles()
+{
+	rotate([180,0,0])
+	translate([0, -(2*gearH+3*gear_gap), 0])
+	for (x=[0:2])
+	{
+		assign(gearHolderWidth = 2*gearH+3*gear_gap+songH)
+		assign (yoff = (x+1)*gearHolderWidth/4)
+		translate([0.5*teethHolderW,yoff,-epsilonCSG])
+		cylinder(d=5, h=0.5*teethHolderH+epsilonCSG, $fn=50);
+	}
+}
 
 module MusicBox()
 {
 	//mirror([0,0,1])
-	translate([teethHolderW+maxTeethL,0,0])
-
-	rotate([180,0,0])
-	for (x = [0:pinNrX-1])
+	difference()
 	{
-		assign(ll = TeethLen(x))
-		{
-			translate([-maxTeethL, x *pinStepX + teethGap, 0]) 
-			{
-				// teeth holder
-				assign (leftAdd = (x == 0) ? gearBoxW : 0, rightAdd = (x == pinNrX-1) ? wall/2+gear_gap : 0)
-				{
-				translate([-(teethHolderW), epsilonCSG-leftAdd, 0]) 
-					cube([teethHolderW+maxTeethL-ll, pinStepX+2*epsilonCSG+leftAdd+rightAdd, teethHolderH]);
-				}
-				
+		translate([teethHolderW+maxTeethL,0,0])
 
-				// teeth
-				translate([-teethHolderW/2, teethGap,0])
-				color([0,1,0])cube([maxTeethL+teethHolderW/2, teethW, teethH]);
+		rotate([180,0,0])
+		for (x = [0:pinNrX-1])
+		{
+			assign(ll = TeethLen(x))
+			{
+				translate([-maxTeethL, x *pinStepX + teethGap, 0]) 
+				{
+					// teeth holder
+					assign (leftAdd = (x == 0) ? gearBoxW : 0, rightAdd = (x == pinNrX-1) ? wall/2+gear_gap : 0)
+					{
+					translate([-(teethHolderW), epsilonCSG-leftAdd, 0]) 
+						cube([teethHolderW+maxTeethL-ll, pinStepX+2*epsilonCSG+leftAdd+rightAdd, teethH]);
+					}
+					
+
+					// teeth
+					translate([-teethHolderW/2, teethGap,0])
+					color([0,1,0])cube([maxTeethL+teethHolderW/2, teethW, teethH]);
+				}
 			}
 		}
+
+		MusicBoxHoles();
 	}
-	
 }
 
 
@@ -501,20 +516,15 @@ if (GENERATE_CASE)
 		translate([-(noteExtendX+musicCylinderRX),-(gearH/2+gear_gap+teethGap),0]) 
 			rotate([0,-noteAlpha*1,0]){
 			
-				translate([0,0,-30]) MusicBox();
+				translate([-60,0,0]) MusicBox();
 
 				// music gear holder
-				rotate([180,0,0]) translate([0, -(2*gearH+3*gear_gap), teethH])
 				difference()
 				{
+					rotate([180,0,0]) translate([0, -(2*gearH+3*gear_gap), teethH])
 					cube([teethHolderW, 2*gearH+3*gear_gap+songH, teethHolderH-teethH]);
 
-					for (x=[0:2])
-					{
-						assign(gearHolderWidth = 2*gearH+3*gear_gap+songH)
-						assign (yoff = (x+1)*gearHolderWidth/4)
-						translate([0.5*teethHolderW,yoff,-epsilonCSG]) cylinder(d=5, h=0.5*teethHolderH+epsilonCSG, $fn=50);
-					}
+					translate([0,0,teethH]) MusicBoxHoles();
 				}
 				translate([0,2*gearH+wall,-teethHolderW]) cube([-negXEnd,5,teethHolderW]);
 			}
