@@ -455,15 +455,16 @@ module MusicBoxPins()
 		assign (yoff = (x+1)*gearHolderWidth/4)
 		translate([0.5*teethHolderW,yoff,0])
 		{
-			cylinder(d=4.9, h=0.5*teethHolderH, $fn=50);
-			translate([0,0,-teethH]) cylinder(d=7, h=teethH, $fn=50);
+			cylinder(d=4.8, h=0.5*teethHolderH, $fn=50);
+			translate([0,0,-teethH]) cylinder(d=10, h=teethH, $fn=50);
 		}
 	}
 }
 
 module MusicBox()
 {
-	//mirror([0,0,1])
+	translate([0,0,-(2+teethH)])
+	mirror([0,0,1])
 	difference()
 	{
 		translate([teethHolderW+maxTeethL,0,-2])
