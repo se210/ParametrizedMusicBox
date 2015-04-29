@@ -540,7 +540,7 @@ if (GENERATE_CASE)
 			
 				translate([-60,0,0]) MusicBox();
 
-				translate([30,0,0]) MusicBoxPins();
+				translate([20,0,0]) MusicBoxPins();
 
 				// music gear holder
 				difference()
