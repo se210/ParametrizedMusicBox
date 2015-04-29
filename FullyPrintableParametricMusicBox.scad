@@ -64,16 +64,20 @@ MusicCylinderNamePosition=0; // [0:top, 1:bottom]
 wall=2;
 
 // how many vibrating teeth should there be? (also number of available notes) You can use the output of the generator for this field: http://www.wizards23.net/projects/musicbox/musicbox.html
-pinNrX = 13;
+//pinNrX = 12;
+pinNrX = 17;
 
 // what should the notes on the teeth be? Each note is encoded by 3 characters: note (C,D,E,F,G,A,B), then the accidental (#, b or blank), and then the a one digit octave. You can use the output of the generator for this field: http://www.wizards23.net/projects/musicbox/musicbox.html
-teethNotes="C 0C#0D 0D#0E 0F 0F#0G 0G#0A 0A#0B 0C 1C#1D 1D#1E 1F 1";
+//teethNotes="C 0C#0D 0D#0E 0F 0F#0G 0G#0A 0A#0B 0C 1C#1D 1D#1E 1F 1";
+teethNotes="A 2A 1E 2E 1F 1G 1G 0G 2D 2Db1D 1Bb1F 2C 1C 2B 1Gb1";
 
 // how many time slots should there be? (If you make this much higher you should also increase musicCylinderTeeth) You can use the output of the generator for this field: http://www.wizards23.net/projects/musicbox/musicbox.html
-pinNrY = 35;
+//pinNrY = 35;
+pinNrY = 41;
 
 // the actual song. each time slot has pinNrX characters. X marks a pin everything else means no pin. You can use the output of the generator for this field: http://www.wizards23.net/projects/musicbox/musicbox.html
-pins="XoooooooooooooXoooooooooooooXoooooooooooooXoooooooooooooXoooooooooooooXoooooooooooooXoooooooooooooXoooooooooooooXoooooooooooooXoooooooooooooXoooooooooooooXoooooooooooooXoooooooooooooXoooXooXoooooooooooooooooooXoooXooXoooooooooooooooooooXoooXooXoooooooooooooooooooXoooXooXoooooooooooooooooooXoooXooXoooooooooooooooooooXoooXooXoooooooooooooXooXoooXoooooooooooooooooooXooXoooXoooooooooooooooooooXooXoooXoooooooooooooooooooXooXoooXoooooooooooooooooooXooXoooXoooooooooooooooooooXooXoooX";
+//pins="XoooooooooooooXoooooooooooooXoooooooooooooXoooooooooooooXoooooooooooooXoooooooooooooXoooooooooooooXoooooooooooooXoooooooooooooXoooooooooooooXoooooooooooooXoooooooooooooXoooooooooooooXoooXooXoooooooooooooooooooXoooXooXoooooooooooooooooooXoooXooXoooooooooooooooooooXoooXooXoooooooooooooooooooXoooXooXoooooooooooooooooooXoooXooXoooooooooooooXooXoooXoooooooooooooooooooXooXoooXoooooooooooooooooooXooXoooXoooooooooooooooooooXooXoooXoooooooooooooooooooXooXoooXoooooooooooooooooooXooXoooX";
+pins = "ooXoooooooooooooXoooooooXoooooooXooXoooooooooooXooooXooooooooooXooooooooooooooXooooXooXXoooooooooooooooooXooXoooooooooooXooooooooooXoooooXXoooooooooooooooooXooooooooooXoooXoooooooooooXooooooXooooooooooXooooXoooooooooooooXoooooooXoooooooXooooooXoooooooXooooooooXoooooooXoooooooXoooXooooooooooooooooooXooooXooooooooXoooooooXooooXooooooooooXoooooXooooooooooXooooXoooooooooooooXoooooXoooooooXooooooooooooXoXooooooooooXooooooooooooooooooXoooooooXoooXooXooooooooooooooooooooXoXooooooooooXoooooooXoooooooooooooXooooXooXoooooooooooXoooooooooooooXooooXooXoooooooooooXoooXoooooooooooooXooooXoooooooooooooXoooooooXoooooooXooooXooXooooooooooooXooXoooooooooooooooooooooooooXoXXoooooooooooooXooooooXoooXoooooooo";
 
 // the number of teeth on the music cylinder
 musicCylinderTeeth = 24;
@@ -416,7 +420,7 @@ translate([pinStepX/2,0,0])
 module MusicCylinder(extra=0)
 {
 	translate([0,0,-extra]) cylinder(r = musicCylinderR, h = teethGap+musicH+extra, center=false, $fn=128);
-	translate([0,0,teethGap])
+	translate([0,0,teethGap/2])
 	for (x = [0:pinNrX-1], y = [0:pinNrY-1])
 	{
 		assign(index = y*pinNrX + x)
@@ -474,6 +478,7 @@ module MusicBox()
 		{
 			assign(ll = TeethLen(x))
 			{
+echo(ll);
 				translate([-maxTeethL, x *pinStepX + teethGap, 0]) 
 				{
 					// teeth holder
@@ -485,8 +490,8 @@ module MusicBox()
 					
 
 					// teeth
-					translate([-teethHolderW/2, teethGap,0])
-					color([0,1,0])cube([maxTeethL+teethHolderW/2, teethW, teethH]);
+					translate([-teethHolderW, teethGap/2,0])
+					color([0,1,0])cube([maxTeethL+teethHolderW, teethW, teethH]);
 				}
 			}
 		}
