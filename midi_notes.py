@@ -2,15 +2,21 @@ import midi
 import re
 
 tracks = [1,2]
-pattern = midi.read_midifile("Smbtheme.mid")
-start = 0
-end = 11.4
+pattern = midi.read_midifile("pokemon-center-2-.mid")
+start = 0.0
+end = 14.25
 
 # inverse mapping
 valToNote = {v: k for k, v in midi.NOTE_NAME_MAP_FLAT.items()}
 pattern.make_ticks_abs();
 
-msecPerTick = (60000 / (pattern[0][1].get_bpm() * pattern.resolution))
+# need to find an instance of midi.SetTempoEvent to get BPM
+tempoEvent = None
+for e in pattern[0]:
+	if isinstance(e, midi.SetTempoEvent):
+		tempoEvent =  e
+		break
+msecPerTick = (60000 / (tempoEvent.get_bpm() * pattern.resolution))
 
 startTick = (start * 1000) / msecPerTick
 endTick = (end * 1000) / msecPerTick
@@ -26,9 +32,13 @@ for t in tracks:
 		elif (e.tick > endTick):
 			break
 		try:
-			notes.add(valToNote[e.get_pitch()])
+			notes.add(e.get_pitch())
 		except:
 			continue
+
+notes = list(notes)
+notes.sort()
+notes = [valToNote[n] for n in notes]
 
 formatNotes = ""
 notemap = {}
